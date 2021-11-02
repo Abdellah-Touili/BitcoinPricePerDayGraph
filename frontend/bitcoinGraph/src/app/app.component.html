@@ -1,0 +1,51 @@
+<div class="container">
+
+  <div class="align-self-center" style="background-color: #f33333">
+    <p class="text-uppercase text-center">Bitcoin Price Per Day </p>
+</div>
+
+
+<form [formGroup]="formRangeDate" (ngSubmit)="submit()">
+  
+<div style="display:flex"> 
+
+<mat-label>Start date:</mat-label>
+<input  [matDatepicker]="startDate"  id="startDate" formControlName="startDate" 
+ placeholder="Choose the Start date" style="float: left;display: flex;align-items: center;justify-content: center;" >
+
+<mat-datepicker-toggle style="float: left;display: flex;align-items: center;justify-content: center;" 
+[for]="startDate"></mat-datepicker-toggle>
+<mat-datepicker #startDate></mat-datepicker>
+
+<mat-label>End date:</mat-label>
+<input [matDatepicker]="endDate" id="endDate" formControlName="endDate" 
+ [max]="maxDateBitcoin" 
+placeholder="Choose the End  date" style="float: left;display: flex;align-items: center;justify-content: center;">
+
+<mat-datepicker-toggle style="float: left;display: flex;align-items: center;justify-content: center;" [for]="endDate"></mat-datepicker-toggle>
+<mat-datepicker #endDate></mat-datepicker>
+
+<button class="btn btn-primary" type="submit">Render </button>
+
+</div>
+
+</form>
+</div>
+
+<div *ngIf = "showChartBitcoin" >
+    <app-chart-day-price></app-chart-day-price>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
