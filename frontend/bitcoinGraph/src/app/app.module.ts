@@ -10,9 +10,11 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 
-import { HttpClientModule} from '@angular/common/http'; 
+import { HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http'; 
+import { ToastrModule } from 'ngx-toastr';
 import { ChartsModule } from 'ng2-charts';
 import { ChartDayPriceComponent } from './components/chart-day-price/chart-day-price.component';
+import { HttpInterceptorService } from './services/http-interceptor.service';
 
 
 
@@ -31,10 +33,16 @@ import { ChartDayPriceComponent } from './components/chart-day-price/chart-day-p
     MatInputModule,
     FormsModule,
     HttpClientModule,
-    ChartsModule
+    ChartsModule,
+    ToastrModule.forRoot()
   ],
   
-  providers: [],
+  providers: [
+    {
+    provide: HTTP_INTERCEPTORS,
+    useClass: HttpInterceptorService,
+    multi: true
+    }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
