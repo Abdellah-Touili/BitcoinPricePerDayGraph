@@ -31,16 +31,14 @@ export class HttpInterceptorService implements HttpInterceptor {
          // server-side error
          errorMessage = "SERVER Error" + error.status + " --- " + "Message:" + error.message;
        }
-      
-      //console.log(errorMessage );
 
       Swal.fire({
         icon: 'error',
         title: 'Oops...',
         text: errorMessage
       })
-
-       return throwError(errorMessage);
+      
+       return throwError(() => errorMessage);
       })
     );
   }

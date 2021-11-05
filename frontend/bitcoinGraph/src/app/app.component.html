@@ -1,51 +1,39 @@
+
+
 <div class="container">
-
   <div class="align-self-center" style="background-color: #f33333">
-    <p class="text-uppercase text-center">Bitcoin Price Per Day </p>
-</div>
-
-
-<form [formGroup]="formRangeDate" (ngSubmit)="submit()">
+    <p class="text-uppercase text-center"><b>Bitcoin Price Per Day</b></p>
+  </div>
+  <div>
+  <form [formGroup]="formRangeDate" (ngSubmit)="submit()">
+  <div class="row">
   
-<div style="display:flex"> 
+   <div class="col-sm">
+      <!-- Start date datepicker in the popup -->
+    <label for="startDate"><b>Start date: </b> </label>
+    <input type="text" id="startDate" formControlName="startDate" ngbDatepicker #d1="ngbDatepicker" readonly
+    [(ngModel)]="modelStartDate" name="modelStartDate" [maxDate]="maxDateBitcoin" (focus)="d1.open()" (dblclick)="d1.close()" (dateSelect)="d1.close()" 
+    (ngModelChange)="submit()" />
+   </div>
 
-<mat-label>Start date:</mat-label>
-<input  [matDatepicker]="startDate"  id="startDate" formControlName="startDate" 
- placeholder="Choose the Start date" style="float: left;display: flex;align-items: center;justify-content: center;" >
+   <div class="col-sm">
+    <!-- End date datepicker in the popup -->
+    <label for="endDate"><b>End date: </b></label>
+   <input type="text" id="endDate" formControlName="endDate" ngbDatepicker #d2="ngbDatepicker" readonly
+   [(ngModel)]="modelEndDate" name="modelEndDate" [maxDate]="maxDateBitcoin"
+   (focus)="d2.open()" (dblclick)="d2.close()" (dateSelect)="d2.close()"
+   (ngModelChange)="submit()" />
+  </div>
 
-<mat-datepicker-toggle style="float: left;display: flex;align-items: center;justify-content: center;" 
-[for]="startDate"></mat-datepicker-toggle>
-<mat-datepicker #startDate></mat-datepicker>
+  <div class="col-sm">
+  <button class="btn btn-primary" type="submit">Render</button>
+  </div>
 
-<mat-label>End date:</mat-label>
-<input [matDatepicker]="endDate" id="endDate" formControlName="endDate" 
- [max]="maxDateBitcoin" 
-placeholder="Choose the End  date" style="float: left;display: flex;align-items: center;justify-content: center;">
-
-<mat-datepicker-toggle style="float: left;display: flex;align-items: center;justify-content: center;" [for]="endDate"></mat-datepicker-toggle>
-<mat-datepicker #endDate></mat-datepicker>
-
-<button class="btn btn-primary" type="submit">Render </button>
-
+  </div>
+  </form>
 </div>
 
-</form>
 </div>
-
 <div *ngIf = "showChartBitcoin" >
-    <app-chart-day-price></app-chart-day-price>
+  <app-chart-day-price></app-chart-day-price> 
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -16,7 +16,7 @@ export class ChartDayPriceComponent implements OnInit {
   
   //----------------------------- Parameters For the GRAPH/CHART -----------------------
   lineChartData: ChartDataSets[] = [
-    { data: [8500, 7200, 7800.670, 7500.800, 7700.678, 7500], label: 'Price-per-Day-Bitcoin' },
+    { data: [], label: 'Price-per-Day-Bitcoin' },
   ];
 
   lineChartLabels: Label[] =[];
@@ -57,8 +57,7 @@ export class ChartDayPriceComponent implements OnInit {
 
   this.dayPriceBitcoinService.postRangeDate(rangeDate).subscribe(
     data => {     
-       
-       this.extractDayPrice(data);  
+       this.extractDayPrice(data);   
     },
     err => {
       console.log(err.message);

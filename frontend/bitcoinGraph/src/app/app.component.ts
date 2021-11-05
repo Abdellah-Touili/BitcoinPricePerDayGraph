@@ -1,8 +1,10 @@
 import { formatDate } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { GetDayPriceBitcoinService } from 'src/app/services/get-day-price-bitcoin.service';
 
+import { NgbCalendar, NgbDatepicker, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+
+import { GetDayPriceBitcoinService } from 'src/app/services/get-day-price-bitcoin.service';
 
 @Component({
   selector: 'app-root',
@@ -10,45 +12,58 @@ import { GetDayPriceBitcoinService } from 'src/app/services/get-day-price-bitcoi
   styleUrls: ['./app.component.scss']
 })
 
-
 export class AppComponent implements OnInit{
 
+  @ViewChild('d1') datePopup1? : NgbDatepicker;
+  @ViewChild('d2') datePopup2? : NgbDatepicker;
+  modelStartDate: NgbDateStruct;
+  modelEndDate: NgbDateStruct;
+  
    today = new Date();
    theStartdate = new Date();
    dateRangeLength = 10;
 
    //To force the User not to choose/select in the 'DatePicker' a date LATER than today
-   maxDateBitcoin = new Date();
-   date = new Date();
+   maxDateBitcoin:NgbDateStruct = {year: this.today.getFullYear(), month: this.today.getMonth() + 1, 
+    day: this.today.getDate()};
+   
+   //To Show or Hide the Bitcoi Graph
    showChartBitcoin = false;
 
   formRangeDate = new FormGroup({
-
     startDate: new FormControl(this.theStartdate),
-    endDate: new FormControl(this.today),
-    resultPicker: new FormControl(this.today),
-    nameControl : new FormControl('')
-
+    endDate: new FormControl(this.today)
   });
+  
+ constructor(private dayPriceBitcoinService: GetDayPriceBitcoinService,private calendar: NgbCalendar) 
+   { 
+    this.modelStartDate = { year: 2021, month: 11, day: 8 };
+    this.modelEndDate = { year: 2021, month: 11, day: 8 };
+    this.selectToday();
+   }
 
- constructor(private dayPriceBitcoinService: GetDayPriceBitcoinService) 
-   { }
-
+   selectToday() {
+    this.modelStartDate = this.calendar.getNext(this.calendar.getToday(), 'd', - this.dateRangeLength);
+    this.modelEndDate = this.calendar.getToday();
+  }
  ngOnInit(): void {
 
-  //When the application is launched for the FIRST time: the 'start date' must be the date of today
-  //Minus 10 days. And the 'end date' must be the date of today
   this.theStartdate.setDate(this.today.getDate()-this.dateRangeLength);
-  this.submit();
- }
 
+ }
 
  submit(){
 
-  var startDate = formatDate(this.formRangeDate.value.startDate, 'yyyy-MM-dd', 'en');
-  var endDate = formatDate(this.formRangeDate.value.endDate, 'yyyy-MM-dd', 'en');
+ //The NgbDatePicker dates are sent, via the Form, in a JSON Format
+ //And must be converted to Date Objects and Formated
+  var startDateModel = new Date(this.formRangeDate.value.startDate.year, this.formRangeDate.value.startDate.month -1, this.formRangeDate.value.startDate.day);
+  var startDate = formatDate(startDateModel, 'yyyy-MM-dd', 'en');
+  
+  var endDateModel = new Date(this.formRangeDate.value.endDate.year, this.formRangeDate.value.endDate.month -1, this.formRangeDate.value.endDate.day);
+  var endDate = formatDate(endDateModel, 'yyyy-MM-dd', 'en');
+
   var rangeDate={"startDate":startDate,"endDate":endDate};
- 
+
   //To send, via the service, the dates range (star and end dates), to the component-Graph (chart-day-price)
   this.dayPriceBitcoinService.invokeEvent.next(JSON.stringify(rangeDate));
 
@@ -57,6 +72,6 @@ export class AppComponent implements OnInit{
 
 }
 
-
 }
+
 
