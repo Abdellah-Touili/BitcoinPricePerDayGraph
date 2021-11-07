@@ -19,5 +19,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-//To PUT 'startDate' and 'endDate' as parameters. And in return get Prices per Days
+//To PUT/Send 'startDate' and 'endDate' as parameters. And in return, get Prices per Days
 Route::apiResource('bitcoinPrice', BitcoinPriceController::class);
