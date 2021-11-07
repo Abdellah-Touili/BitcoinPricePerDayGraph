@@ -27,50 +27,52 @@ export class AppComponent implements OnInit{
    maxDateBitcoin:NgbDateStruct = {year: this.today.getFullYear(), month: this.today.getMonth() + 1, 
     day: this.today.getDate()};
    
-   //To Show or Hide the Bitcoi Graph
+   //To Show or Hide the Bitcoin Graph
    showChartBitcoin = false;
 
-  formRangeDate = new FormGroup({
+   //When the web application is launched for the first time : the 'start date' is set for 'Today'
+   //And the 'end date' is set for 'Today' - 10 days
+   formRangeDate = new FormGroup({
     startDate: new FormControl(this.theStartdate),
     endDate: new FormControl(this.today)
-  });
+   });
   
- constructor(private dayPriceBitcoinService: GetDayPriceBitcoinService,private calendar: NgbCalendar) 
-   { 
+  constructor(private dayPriceBitcoinService: GetDayPriceBitcoinService,private calendar: NgbCalendar) 
+  { 
+    //Config the Models of the dates and Initialize them 
     this.modelStartDate = { year: 2021, month: 11, day: 8 };
     this.modelEndDate = { year: 2021, month: 11, day: 8 };
     this.selectToday();
-   }
+  }
 
-   selectToday() {
+  selectToday() {
     this.modelStartDate = this.calendar.getNext(this.calendar.getToday(), 'd', - this.dateRangeLength);
     this.modelEndDate = this.calendar.getToday();
   }
- ngOnInit(): void {
+  ngOnInit(): void {
+    this.theStartdate.setDate(this.today.getDate()-this.dateRangeLength);
+  }
 
-  this.theStartdate.setDate(this.today.getDate()-this.dateRangeLength);
+  //handle the data sended by the Form
+  submit(){
 
- }
+    //The NgbDatePicker dates are sent, via the Form, in a JSON Format
+    //And must be converted to Date Objects and be Formated
+      var startDateModel = new Date(this.formRangeDate.value.startDate.year, this.formRangeDate.value.startDate.month -1, this.formRangeDate.value.startDate.day);
+      var startDate = formatDate(startDateModel, 'yyyy-MM-dd', 'en');
+      
+      var endDateModel = new Date(this.formRangeDate.value.endDate.year, this.formRangeDate.value.endDate.month -1, this.formRangeDate.value.endDate.day);
+      var endDate = formatDate(endDateModel, 'yyyy-MM-dd', 'en');
 
- submit(){
+      var rangeDate={"startDate":startDate,"endDate":endDate};
 
- //The NgbDatePicker dates are sent, via the Form, in a JSON Format
- //And must be converted to Date Objects and Formated
-  var startDateModel = new Date(this.formRangeDate.value.startDate.year, this.formRangeDate.value.startDate.month -1, this.formRangeDate.value.startDate.day);
-  var startDate = formatDate(startDateModel, 'yyyy-MM-dd', 'en');
-  
-  var endDateModel = new Date(this.formRangeDate.value.endDate.year, this.formRangeDate.value.endDate.month -1, this.formRangeDate.value.endDate.day);
-  var endDate = formatDate(endDateModel, 'yyyy-MM-dd', 'en');
+      //To send, via the service, the dates range (start and end dates), to the component-Graph (chart-day-price)
+      this.dayPriceBitcoinService.invokeEvent.next(JSON.stringify(rangeDate));
 
-  var rangeDate={"startDate":startDate,"endDate":endDate};
+      //Once the 'dates range' are received from the Form, the Graph/Chart component 'chart-day-price' could be shown
+      this.showChartBitcoin = true;
 
-  //To send, via the service, the dates range (star and end dates), to the component-Graph (chart-day-price)
-  this.dayPriceBitcoinService.invokeEvent.next(JSON.stringify(rangeDate));
-
-   //Once the 'dates range' are received from the Form, the Graph/Chart component 'chart-day-price' could be shown
-   this.showChartBitcoin = true;
-
-}
+  }
 
 }
 

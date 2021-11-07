@@ -38,56 +38,50 @@ export class ChartDayPriceComponent implements OnInit {
   lineChartType = 'line' as ChartType;
 
   //--------------------------------------------------------------------------------
-
   constructor(private dayPriceBitcoinService: GetDayPriceBitcoinService) { }
 
   ngOnInit(): void {
     
-    // to have the dates range from the User (From the 'range dates' Form, main component)
+    // to have the dates range from the User (From the Form, main component)
     this.dayPriceBitcoinService.invokeEvent.subscribe((value) => {
     this.startEndDates= value;
     this.getDayPriceBitcoin(this.startEndDates);
- });
+    });
 
   }
 
- //Get the data (days and prices) from the API, corresponding the dates range given by the User
- getDayPriceBitcoin(rangeDate:any)
- {
-
-  this.dayPriceBitcoinService.postRangeDate(rangeDate).subscribe(
-    data => {     
-       this.extractDayPrice(data);   
-    },
-    err => {
-      console.log(err.message);
-    }, 
-    () => {
-    }  
-  );
-
- }
-
- //Extract The days and their corresponding prices from the data received from the Backend-API.
- //And fill in the 'Labels' and 'Data' of the Graph
- extractDayPrice(JsonObj:any)
- { 
-  
-  //To have the correct 'Labels' and 'Data' of the Graph, The corresponding Arrays must be Empty for each
-  //change of the Dates range
-  this.lineChartLabels =[];
-  this.priceChartData[0].data =[];
-
-  for(let dayPrice of Object.keys(JsonObj))
+  //Get the data (days and prices) from the API, corresponding the dates range given by the User
+  getDayPriceBitcoin(rangeDate:any)
   {
-    var day   =  JsonObj[dayPrice]["day"];
-    var price =  JsonObj[dayPrice]["price"];
-    this.lineChartLabels.push(day);
-    this.priceChartData[0].data?.push(price); 
-  }
- 
+      this.dayPriceBitcoinService.postRangeDate(rangeDate).subscribe(
+        data => {     
+          this.extractDayPrice(data);   
+        },
+        err => {
+          console.log(err.message);
+        }, 
+        () => {
+        }  
+      );
+   }
+
+   //Extract The days and their corresponding prices from the data received from the Backend-API.
+   //And fill in the 'Labels' and 'Data' of the Graph
+   extractDayPrice(JsonObj:any)
+   {  
+      //To have the correct 'Labels' and 'Data' of the Graph, The corresponding Arrays must be Empty for each
+      //change of the Dates range
+      this.lineChartLabels =[];
+      this.priceChartData[0].data =[];
+
+      for(let dayPrice of Object.keys(JsonObj))
+      {
+        var day   =  JsonObj[dayPrice]["day"];
+        var price =  JsonObj[dayPrice]["price"];
+        this.lineChartLabels.push(day);
+        this.priceChartData[0].data?.push(price); 
+      }
+   }  
 }
-  
- }
 
 
